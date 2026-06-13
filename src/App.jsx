@@ -1,67 +1,58 @@
-import { useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { ScrollControls, Scroll, useScroll } from '@react-three/drei'
+import { Suspense } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { ScrollControls, Scroll } from '@react-three/drei'
+import SceneController from './components/SceneController'
 import './App.css'
-
-// A component that changes based on scroll progress
-function AnimationController() {
-  const meshRef = useRef()
-  const scroll = useScroll()
-  
-  useFrame(() => {
-    // scroll.offset is overall scroll progress (0 to 1)
-    const progress = scroll.offset
-    
-    // Example state changes based on scroll
-    // 1. Rotate the box continuously based on overall progress
-    meshRef.current.rotation.x = progress * Math.PI * 4
-    meshRef.current.rotation.y = progress * Math.PI * 4
-    
-    // 2. Trigger animations using range
-    // range(from, distance, margin) returns a 0-1 value when scroll is within range
-    // Let's animate scale when scrolling from 0.2 to 0.4
-    const scaleFactor = 1 + scroll.range(0.2, 0.2) * 2
-    meshRef.current.scale.set(scaleFactor, scaleFactor, scaleFactor)
-    
-    // 3. Move across screen using curve (0-1-0) when scrolling from 0.4 to 0.6
-    const xPos = scroll.curve(0.4, 0.2) * 5 - 2.5
-    meshRef.current.position.x = xPos
-
-    // 4. Color change based on visibility or threshold
-    if (progress > 0.8) {
-      meshRef.current.material.color.set('hotpink')
-    } else if (progress > 0.5) {
-      meshRef.current.material.color.set('lightblue')
-    } else {
-      meshRef.current.material.color.set('orange')
-    }
-  })
-  
-  return (
-    <mesh ref={meshRef} position={[0, 0, 0]}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="orange" />
-    </mesh>
-  )
-}
 
 function HTMLContent() {
   return (
-    <Scroll html style={{ width: '100vw', color: 'white' }}>
+    <Scroll html style={{ width: '100vw', color: '#4a3018' }}>
       <div style={{ height: '100vh', display: 'flex', alignItems: 'center', padding: '0 10vw' }}>
-        <h1>1. Scroll Down to Start</h1>
+        <div>
+          <h1 style={{ fontSize: '4rem', margin: 0, color: '#3b2818' }}>Coffee4life</h1>
+          <p style={{ fontSize: '1.5rem', margin: '1rem 0' }}>Savor the perfect blend.</p>
+          <p style={{ opacity: 0.6 }}>Scroll down to explore</p>
+        </div>
       </div>
+      
       <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 10vw' }}>
-        <h1>2. Expanding Range (0.2 - 0.4)</h1>
+        <div style={{ textAlign: 'right', maxWidth: '400px' }}>
+          <h2 style={{ fontSize: '3rem', margin: 0 }}>The Origin</h2>
+          <p style={{ fontSize: '1.2rem', lineHeight: 1.6 }}>Sourced from the finest high-altitude farms. Every bean is handpicked for exceptional quality and character.</p>
+        </div>
       </div>
+      
       <div style={{ height: '100vh', display: 'flex', alignItems: 'center', padding: '0 10vw' }}>
-        <h1>3. Curve Motion (0.4 - 0.6)</h1>
+        <div style={{ maxWidth: '400px' }}>
+          <h2 style={{ fontSize: '3rem', margin: 0 }}>The Process</h2>
+          <p style={{ fontSize: '1.2rem', lineHeight: 1.6 }}>An artisanal approach. Precision roasting unlocks the complex aromas and deep flavors hidden within.</p>
+        </div>
       </div>
+      
       <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 10vw' }}>
-        <h1>4. Color Change (&gt; 0.5 & &gt; 0.8)</h1>
+        <div style={{ textAlign: 'right', maxWidth: '400px' }}>
+          <h2 style={{ fontSize: '3rem', margin: 0 }}>The Experience</h2>
+          <p style={{ fontSize: '1.2rem', lineHeight: 1.6 }}>More than just a drink. A moment of tranquility, accompanied by the warmth and aroma that fills the room.</p>
+        </div>
       </div>
-      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', padding: '0 10vw' }}>
-        <h1>5. End of Scroll</h1>
+      
+      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 10vw' }}>
+        <div>
+          <h2 style={{ fontSize: '4rem', margin: 0 }}>Taste the Magic</h2>
+          <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>Ready for your daily ritual?</p>
+          <button style={{ 
+            background: '#3b2818', 
+            color: 'white', 
+            border: 'none', 
+            padding: '1rem 2.5rem', 
+            fontSize: '1.2rem', 
+            borderRadius: '30px',
+            cursor: 'pointer',
+            transition: 'background 0.3s'
+          }}>
+            Shop Now
+          </button>
+        </div>
       </div>
     </Scroll>
   )
@@ -69,18 +60,16 @@ function HTMLContent() {
 
 function App() {
   return (
-    <div id="canvas-container" style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0 }}>
-      <Canvas>
-        <ambientLight intensity={Math.PI / 2} />
-        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-        <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-        
-        {/* ScrollControls sets up a scrollable HTML overlay and provides useScroll context */}
-        {/* pages=5 means the scrollable height is 5 times the viewport height */}
-        <ScrollControls pages={5} damping={0.1}>
-          <AnimationController />
-          <HTMLContent />
-        </ScrollControls>
+    <div id="canvas-container" style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, background: '#faf0e6' }}>
+      <Canvas shadows camera={{ position: [0, 2, 5], fov: 45 }}>
+        <Suspense fallback={null}>
+          {/* ScrollControls sets up a scrollable HTML overlay and provides useScroll context */}
+          {/* pages=5 matches our 5 HTML sections */}
+          <ScrollControls pages={5} damping={0.25}>
+            <SceneController />
+            <HTMLContent />
+          </ScrollControls>
+        </Suspense>
       </Canvas>
     </div>
   )
