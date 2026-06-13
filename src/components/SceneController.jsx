@@ -17,76 +17,101 @@ export default function SceneController() {
   const beansArr = Array.from({ length: 20 })
 
   useFrame((state, delta) => {
-    // Scroll offset ranges from 0 to 1
-    const r3 = scroll.range(2 / 5, 1 / 5) // Process to Experience
+    const offset = scroll.offset
+
+    // Ranges
+    // r1: Hero to Origin (0 to 0.25)
+    const rHeroOrigin = scroll.range(0, 0.25)
+    // r2: Origin to Process (0.25 to 0.5)
+    const rOriginProcess = scroll.range(0.25, 0.25)
+    // r3: Process to Experience (0.5 to 0.75)
+    const rProcessExperience = scroll.range(0.5, 0.25)
+    // r4: Experience to End (0.75 to 1.0)
+    const rExperienceEnd = scroll.range(0.75, 0.25)
     
-    // Overall progress
-    const progress = scroll.offset
+    // Curves (parabolic peaks)
+    const cOrigin = scroll.curve(0.125, 0.25) // Peaks at Origin
+    const cProcess = scroll.curve(0.375, 0.25) // Peaks at Process
+    const cExperience = scroll.curve(0.625, 0.25) // Peaks at Experience
 
     // 1. Camera Animation
-    // Move camera in an arc around the scene as we scroll
-    const angle = progress * Math.PI * 1.5
-    const radius = 5 - progress * 2 // Dolly in slightly
+    // Arc the camera around based on total offset
+    const angle = offset * Math.PI * 2
+    // Dolly out at Origin, dolly in at End
+    const radius = 5 + cOrigin * 2 - rExperienceEnd * 1.5
+    const camY = 2 + cProcess * 2 - rExperienceEnd * 0.5
     
-    // Smooth camera movement using state.camera
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, Math.sin(angle) * radius, 0.05)
     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, Math.cos(angle) * radius, 0.05)
-    state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, 2 + Math.sin(progress * Math.PI) * 2, 0.05)
+    state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, camY, 0.05)
     state.camera.lookAt(0, 0.5, 0)
 
     // 2. Object Animations
     
-    // Cup: starts center, moves left during origin, explodes during process
     if (cupGroup.current) {
-      // Float up slightly when in Experience
-      cupGroup.current.position.y = THREE.MathUtils.lerp(0, 0.5, r3)
+      // Cup floats up towards the end
+      const targetY = rProcessExperience * 0.5 + rExperienceEnd * 0.2
+      cupGroup.current.position.y = THREE.MathUtils.lerp(cupGroup.current.position.y, targetY, 0.05)
       
-      // Exploded view logic: split saucer and cup
-      const explodeAmount = scroll.curve(2/5, 1/5) * 1.5
-      cupGroup.current.children[0].position.y = 0.5 + explodeAmount // Cup body
-      cupGroup.current.children[1].position.y = 0.5 + explodeAmount // Handle
-      cupGroup.current.children[2].position.y = 0.9 + explodeAmount // Coffee
-      cupGroup.current.children[3].position.y = -explodeAmount * 0.5 // Saucer
+      // Exploded view during the "Process" phase
+      const explodeAmount = cProcess * 2.0
+      
+      // We assume Models.jsx exports CoffeeCup with 4 children meshes 
+      // (body, handle, coffee, saucer) if not, this still applies to its children
+      if (cupGroup.current.children.length > 0 && cupGroup.current.children[0].children.length >= 4) {
+        const parts = cupGroup.current.children[0].children
+        // Smoothly animate explosion
+        parts[0].position.y = THREE.MathUtils.lerp(parts[0].position.y, 0.5 + explodeAmount * 0.8, 0.1) // Body
+        parts[1].position.y = THREE.MathUtils.lerp(parts[1].position.y, 0.5 + explodeAmount * 0.8, 0.1) // Handle
+        parts[2].position.y = THREE.MathUtils.lerp(parts[2].position.y, 0.9 + explodeAmount * 1.2, 0.1) // Coffee
+        parts[3].position.y = THREE.MathUtils.lerp(parts[3].position.y, 0.0 - explodeAmount * 0.5, 0.1) // Saucer
+      }
     }
 
-    // Beans: cluster at start, scatter/float during origin and process
     if (beansGroup.current) {
-      const scatterAmount = scroll.curve(1/5, 3/5) * 4
+      // Beans scatter heavily during Origin, stay slightly scattered after
+      const scatterAmount = rHeroOrigin * 3 + cOrigin * 2 + rOriginProcess * 3 - rExperienceEnd * 2
       
       beansGroup.current.children.forEach((bean, i) => {
-        // Individual bean movement
         const angleBean = (i / beansArr.length) * Math.PI * 2
-        const dist = 0.5 + scatterAmount * (1 + (i % 3) * 0.5)
+        // Base distance
+        const dist = 0.3 + scatterAmount * (0.5 + (i % 3) * 0.3)
         
         const targetX = Math.cos(angleBean) * dist
         const targetZ = Math.sin(angleBean) * dist
-        const targetY = (scatterAmount > 0) ? Math.sin(state.clock.elapsedTime + i) * 0.5 + scatterAmount : 0
+        // Floating effect
+        const floatY = (scatterAmount > 0) ? Math.sin(state.clock.elapsedTime * 2 + i) * 0.2 * scatterAmount : 0
+        const targetY = floatY + scatterAmount * 0.2
         
         bean.position.x = THREE.MathUtils.lerp(bean.position.x, targetX, 0.05)
         bean.position.z = THREE.MathUtils.lerp(bean.position.z, targetZ, 0.05)
         bean.position.y = THREE.MathUtils.lerp(bean.position.y, targetY, 0.05)
         
-        bean.rotation.x += delta * (0.2 + scatterAmount)
-        bean.rotation.y += delta * (0.3 + scatterAmount)
+        bean.rotation.x += delta * (0.1 + scatterAmount * 0.5)
+        bean.rotation.y += delta * (0.2 + scatterAmount * 0.5)
       })
     }
 
-    // Plant: scale up during the Experience phase
     if (plantGroup.current) {
-      const plantScale = 0.1 + r3 * 0.9 // grows from 0.1 to 1.0
-      plantGroup.current.scale.set(plantScale, plantScale, plantScale)
-      plantGroup.current.position.set(-2, 0, -2)
+      // Plant grows mostly during Process and Experience
+      const plantScale = 0.1 + rOriginProcess * 0.4 + rProcessExperience * 0.5 
+      plantGroup.current.scale.setScalar(THREE.MathUtils.lerp(plantGroup.current.scale.x, plantScale, 0.05))
+      
+      // Move slightly into view
+      const targetX = -2 - cExperience * 1
+      const targetZ = -2 - cExperience * 1
+      plantGroup.current.position.set(targetX, 0, targetZ)
     }
     
-    // Scene overall rotation for a turntable feel
+    // Overall turntable scene
     if (sceneGroup.current) {
-      sceneGroup.current.rotation.y = progress * Math.PI * 0.5
+      // Add a slight tilt and rotate based on scroll
+      sceneGroup.current.rotation.y = offset * Math.PI * 0.25
     }
   })
 
   return (
     <group ref={sceneGroup}>
-      {/* Lighting tailored for the coffee vibe */}
       <ambientLight intensity={0.4} color="#fff1e6" />
       <directionalLight 
         position={[5, 10, 5]} 
@@ -103,7 +128,6 @@ export default function SceneController() {
       />
       <pointLight position={[0, 2, 0]} intensity={0.5} color="#d4a373" />
 
-      {/* Main composition */}
       <group position={[0, -0.5, 0]}>
         <group ref={cupGroup}>
           <CoffeeCup />
@@ -115,15 +139,13 @@ export default function SceneController() {
           ))}
         </group>
 
-        <group ref={plantGroup} scale={0.1}>
+        <group ref={plantGroup} scale={0.1} position={[-2, 0, -2]}>
           <Plant />
         </group>
         
-        {/* Soft floating particles for ambiance */}
         <Particles count={150} />
       </group>
       
-      {/* Subtle floor for shadows and grounding */}
       <mesh position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[20, 20]} />
         <meshStandardMaterial color="#faf0e6" roughness={1} />
