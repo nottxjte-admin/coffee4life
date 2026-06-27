@@ -89,7 +89,7 @@ function getSectionAnimation(sectionIdx, offset) {
   }
 }
 
-function Nav({ scrollOffset }) {
+export function Nav({ scrollOffset }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const navScrolled = scrollOffset > 0.08
 
@@ -268,11 +268,8 @@ export default function UI() {
   const offset = useScrollOffset()
 
   return (
-    <>
-      <Nav scrollOffset={offset} />
-
-      <Scroll html className="scroll-container" role="main">
-        {SECTIONS.map((section, i) => (
+    <Scroll html className="scroll-container" role="main">
+      {SECTIONS.map((section, i) => (
           <section
             key={section.id}
             id={`section-${section.id}`}
@@ -287,6 +284,5 @@ export default function UI() {
           </section>
         ))}
       </Scroll>
-    </>
   )
 }
