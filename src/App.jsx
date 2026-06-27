@@ -23,22 +23,27 @@ function App() {
   const [webglError, setWebglError] = useState(false)
   const canvasContainerRef = useRef(null)
 
-  // Listen for webglcontextcreationerror on the canvas element.
-  // This catches WebGL failures at the DOM level before they become
-  // uncaught exceptions that crash the React tree.
+  // Check WebGL context validity immediately after Canvas creation.
+  // The webglcontextcreationerror event fires BEFORE onCreated,
+  // so instead of listening for the event, we inspect the renderer's
+  // context directly.
   const handleCanvasCreated = useCallback((state) => {
-    const canvas = state.gl.domElement
-    if (!canvas) return
+    try {
+      const gl = state.gl
+      if (!gl) {
+        setWebglError(true)
+        return
+      }
 
-    const onContextError = () => {
+      // Try to get the WebGL context — if context creation failed,
+      // this will return null or the context will be in a lost state.
+      const context = gl.getContext()
+      if (!context || context.isContextLost()) {
+        setWebglError(true)
+      }
+    } catch {
       setWebglError(true)
     }
-
-    canvas.addEventListener('webglcontextcreationerror', onContextError, { once: true })
-    canvas.addEventListener('webglcontextlost', onContextError, { once: true })
-
-    // Store cleanup ref
-    canvas._webglErrorHandler = onContextError
   }, [])
 
   // If a WebGL error has occurred, show fallback
