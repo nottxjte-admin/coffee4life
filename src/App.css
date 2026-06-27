@@ -628,3 +628,86 @@
 
   .hero-title { letter-spacing: -0.025em; }
 }
+
+/* ============================================================
+   Fallback page — shown when WebGL is unavailable
+   Graceful non-3D landing page with static scrollable sections
+   ============================================================ */
+.fallback-page {
+  width: 100vw;
+  min-height: 100vh;
+  background: var(--bg-warm);
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.fallback-main {
+  padding-top: 48px; /* nav height */
+}
+
+.fallback-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 10vw;
+  box-sizing: border-box;
+}
+
+.fallback-content {
+  max-width: 480px;
+}
+
+/* Hero: center-aligned, more vertical padding */
+.fallback-hero {
+  justify-content: center;
+  text-align: center;
+  padding-top: 48px;
+}
+
+.fallback-hero .fallback-content {
+  max-width: 580px;
+}
+
+/* CTA: center-aligned */
+.fallback-cta {
+  justify-content: center;
+  text-align: center;
+}
+
+.fallback-cta .fallback-content {
+  max-width: 480px;
+}
+
+/* Responsive adjustments for fallback page */
+@media (max-width: 1024px) {
+  .fallback-section { padding: 0 8vw; }
+  .fallback-content  { max-width: 420px; }
+  .fallback-hero .fallback-content { max-width: 480px; }
+}
+
+@media (max-width: 768px) {
+  .fallback-section {
+    padding: 0 6vw;
+    padding-top: 26vh;
+    align-items: flex-start;
+  }
+
+  .fallback-hero {
+    justify-content: center;
+    padding-top: 48px;
+    align-items: center;
+  }
+
+  .fallback-cta {
+    align-items: center;
+  }
+
+  .fallback-content  { max-width: 100%; }
+  .fallback-hero .fallback-content { max-width: 100%; }
+  .fallback-cta .fallback-content  { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .fallback-section { padding: 0 1.25rem; padding-top: 24vh; }
+}
