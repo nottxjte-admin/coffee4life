@@ -33,14 +33,31 @@ export default class WebGLErrorBoundary extends Component {
   }
 
   componentDidMount() {
-    // Listen for unhandled promise rejections that escape React's error boundaries
+    // Listen for unhandled promise rejections that escape React's error boundaries.
+    // The Three.js WebGL context creation failure throws with an empty error message
+    // in some environments — we catch it by checking both the message and stack trace.
     this._unhandledRejection = (event) => {
-      // Only catch WebGL/Three.js related rejections to avoid swallowing other errors
       const reason = event.reason
-      if (
-        reason &&
-        (reason.message || '').toLowerCase().includes('webgl')
-      ) {
+      if (!reason) return
+
+      const message = (reason.message || '').toLowerCase()
+      const stack = (reason.stack || '').toLowerCase()
+      const reasonStr = typeof reason === 'string' ? reason.toLowerCase() : ''
+
+      const isWebGLError =
+        message.includes('webgl') ||
+        message.includes('three.') ||
+        message.includes('r3f') ||
+        stack.includes('webglrenderer') ||
+        stack.includes('three') ||
+        stack.includes('@react-three') ||
+        reasonStr.includes('webgl') ||
+        // Catch the case where the error message is empty but it came from
+        // Three.js / R3F internals — the original investigation found empty
+        // error messages from WebGL context creation failures.
+        (message === '' && stack.length > 0)
+
+      if (isWebGLError) {
         event.preventDefault()
         this.setState({
           hasError: true,
