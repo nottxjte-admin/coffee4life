@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { useScroll } from '@react-three/drei'
 import * as THREE from 'three'
 import { CoffeeCup, CoffeeBean, Plant, Steam, Particles } from './Models'
+import { publishScroll } from '../scrollStore'
 
 const BEAN_COUNT = 20
 const beansArr = Array.from({ length: BEAN_COUNT })
@@ -17,6 +18,8 @@ export default function SceneController() {
 
   useFrame((state, delta) => {
     const offset = scroll.offset
+    // Broadcast to outside-Canvas React components via scrollStore
+    publishScroll(offset)
 
     // ── Scroll ranges ────────────────────────────────────────────
     // Each range returns 0→1 over that slice of the scroll progress

@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber'
 import { ScrollControls } from '@react-three/drei'
 import SceneController from './components/SceneController'
 import UI from './components/UI'
+import ScrollProgress from './components/ScrollProgress'
 import './App.css'
 
 // Minimal loading screen shown while Three.js assets initialise
@@ -38,6 +39,9 @@ function App() {
           </Suspense>
         </Canvas>
       </Suspense>
+
+      {/* Scroll progress UI lives outside Canvas so it's on top of everything */}
+      <ScrollProgress />
     </div>
   )
 }
