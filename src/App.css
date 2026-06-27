@@ -1,4 +1,33 @@
 /* ============================================================
+   Design System — Apple-inspired
+   Font stack: -apple-system / system-ui (SF Pro where available)
+   Accent: #0071e3 (Apple Blue)
+   ============================================================ */
+:root {
+  --font-display: -apple-system, 'SF Pro Display', system-ui, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body:    -apple-system, 'SF Pro Text',    system-ui, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Palette */
+  --bg-dark:    #000000;
+  --bg-light:   #f5f5f7;
+  --bg-warm:    #faf0e6;     /* 3D canvas backdrop */
+  --text-dark:  #1d1d1f;
+  --text-warm:  #3b2818;
+  --text-mid:   rgba(59, 40, 24, 0.72);
+  --text-on-dark: rgba(255, 255, 255, 0.92);
+
+  --accent:       #0071e3;  /* Apple Blue — interactive elements only */
+  --accent-dark:  #0077ed;
+  --accent-hover: #0068d1;
+  --focus-ring:   #0071e3;
+
+  /* Surfaces */
+  --nav-bg-scrolled: rgba(250, 240, 230, 0.88);
+  --nav-blur:         saturate(180%) blur(20px);
+  --card-shadow:      rgba(59, 40, 24, 0.15) 3px 5px 30px;
+}
+
+/* ============================================================
    Canvas shell
    ============================================================ */
 .canvas-wrapper {
@@ -7,7 +36,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background: #faf0e6;
+  background: var(--bg-warm);
 }
 
 /* ============================================================
@@ -20,158 +49,221 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  background: #faf0e6;
+  gap: 2rem;
+  background: var(--bg-warm);
   z-index: 200;
 }
 
 .loading-logo {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  color: #3b2818;
-  letter-spacing: 0.06em;
-  font-weight: bold;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  color: var(--text-warm);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.loading-tagline {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin-top: -1.25rem;
 }
 
 .loading-bar {
-  width: min(220px, 60vw);
-  height: 3px;
-  background: rgba(59, 40, 24, 0.15);
+  width: min(180px, 50vw);
+  height: 2px;
+  background: rgba(59, 40, 24, 0.12);
   border-radius: 2px;
   overflow: hidden;
 }
 
 .loading-fill {
   height: 100%;
-  background: #3b2818;
+  background: var(--text-warm);
   border-radius: 2px;
-  animation: loading-sweep 1.4s ease-in-out infinite;
+  animation: loading-sweep 1.6s ease-in-out infinite;
 }
 
 @keyframes loading-sweep {
   0%   { width: 0%;   margin-left: 0; }
-  50%  { width: 60%;  margin-left: 20%; }
+  50%  { width: 55%;  margin-left: 22%; }
   100% { width: 0%;   margin-left: 100%; }
 }
 
 /* ============================================================
-   Navigation — fixed top bar
+   Navigation — Apple-style: 48px, glass, compact
    ============================================================ */
 .fixed-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1.5rem 2.5rem;
+  height: 48px;
+  padding: 0 2.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 100;
   box-sizing: border-box;
   pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(250, 240, 230, 0.85) 0%,
-    rgba(250, 240, 230, 0) 100%
-  );
-  backdrop-filter: blur(0px);
-  transition: background 0.4s ease, backdrop-filter 0.4s ease, padding 0.3s ease;
+  background: transparent;
+  transition: background 0.4s ease, backdrop-filter 0.4s ease;
 }
 
-/* Scrolled state: solid frosted-glass bar */
+/* Scrolled: Apple glass nav */
 .fixed-nav--scrolled {
-  background: rgba(250, 240, 230, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  background: var(--nav-bg-scrolled);
+  backdrop-filter: var(--nav-blur);
+  -webkit-backdrop-filter: var(--nav-blur);
   border-bottom: 1px solid rgba(59, 40, 24, 0.08);
 }
 
 .nav-logo {
   margin: 0;
-  color: #3b2818;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 1.3rem;
-  font-weight: bold;
-  letter-spacing: 0.04em;
+  color: var(--text-warm);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   pointer-events: auto;
   text-decoration: none;
+  line-height: 1;
 }
 
 .nav-links {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0;
 }
 
 .nav-links a {
-  padding: 0.4rem 0.75rem;
-  color: #4a3018;
+  padding: 0 0.85rem;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  color: var(--text-warm);
   text-decoration: none;
-  font-weight: 500;
-  font-family: system-ui, sans-serif;
-  font-size: 0.95rem;
-  border-radius: 4px;
+  font-weight: 400;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
+  opacity: 0.8;
   transition: opacity 0.2s;
 }
 
 .nav-links a:hover,
 .nav-links a:focus-visible {
-  opacity: 0.7;
-  outline: 2px solid #3b2818;
-  outline-offset: 2px;
+  opacity: 1;
+  outline: none;
+}
+
+.nav-links a:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+  border-radius: 4px;
 }
 
 /* ============================================================
-   Buttons
+   Buttons — Apple-style CTAs
    ============================================================ */
+
+/* "Buy Now" — pill, accent fill */
 .btn-buy {
-  background: #3b2818;
+  background: var(--accent);
   color: #fff;
   border: none;
-  padding: 0.5rem 1.4rem;
-  border-radius: 20px;
+  padding: 0.38rem 1.1rem;
+  border-radius: 980px;
   cursor: pointer;
-  margin-left: 0.5rem;
-  font-family: system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
+  margin-left: 0.75rem;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  pointer-events: auto;
   transition: background 0.2s, transform 0.15s;
 }
 
-.btn-buy:hover,
+.btn-buy:hover {
+  background: var(--accent-hover);
+}
+
 .btn-buy:focus-visible {
-  background: #4a3018;
-  transform: translateY(-1px);
-  outline: 2px solid #3b2818;
+  outline: 2px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
+/* "Shop Now" — hero CTA, large pill
+   Two variants: solid accent and outline ghost */
 .btn-shop {
-  background: #3b2818;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--accent);
   color: #fff;
-  border: none;
-  padding: 1rem 3rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 30px;
+  border: 1.5px solid transparent;
+  padding: 0.75rem 2.25rem;
+  font-size: 1.06rem;
+  font-weight: 400;
+  border-radius: 980px;
   cursor: pointer;
-  font-family: system-ui, sans-serif;
-  letter-spacing: 0.03em;
-  transition: transform 0.2s, background 0.3s, box-shadow 0.2s;
-  box-shadow: 0 8px 24px rgba(59, 40, 24, 0.25);
+  font-family: var(--font-body);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 6px 20px rgba(0, 113, 227, 0.28);
 }
 
-.btn-shop:hover,
+.btn-shop:hover {
+  background: var(--accent-hover);
+  transform: scale(1.01);
+  box-shadow: 0 8px 26px rgba(0, 113, 227, 0.36);
+}
+
 .btn-shop:focus-visible {
-  transform: translateY(-2px);
-  background: #4a3018;
-  box-shadow: 0 12px 30px rgba(59, 40, 24, 0.35);
-  outline: 2px solid #3b2818;
+  outline: 2px solid var(--focus-ring);
   outline-offset: 3px;
+}
+
+.btn-learn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  padding: 0.75rem 2.25rem;
+  font-size: 1.06rem;
+  font-weight: 400;
+  border-radius: 980px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.btn-learn:hover {
+  background: rgba(0, 113, 227, 0.06);
+  transform: scale(1.01);
+}
+
+.btn-learn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.cta-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
 }
 
 /* ============================================================
@@ -182,42 +274,39 @@
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   cursor: pointer;
   pointer-events: auto;
-  padding: 6px;
-  border-radius: 6px;
+  padding: 8px;
+  border-radius: 8px;
   transition: background 0.2s;
 }
 
 .nav-hamburger:hover,
 .nav-hamburger:focus-visible {
-  background: rgba(59, 40, 24, 0.08);
-  outline: 2px solid #3b2818;
+  background: rgba(59, 40, 24, 0.06);
+}
+
+.nav-hamburger:focus-visible {
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
 .hamburger-bar {
   display: block;
   width: 100%;
-  height: 2px;
-  background: #3b2818;
+  height: 1.5px;
+  background: var(--text-warm);
   border-radius: 2px;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: transform 0.22s ease, opacity 0.22s ease;
 }
 
-.hamburger-bar.open:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-.hamburger-bar.open:nth-child(2) {
-  opacity: 0;
-}
-.hamburger-bar.open:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
+.hamburger-bar.open:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger-bar.open:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger-bar.open:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* ============================================================
    Mobile dropdown menu
@@ -225,46 +314,57 @@
 .mobile-menu {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 4px);
   right: 1.5rem;
   background: rgba(250, 240, 230, 0.97);
-  border: 1px solid rgba(59, 40, 24, 0.12);
-  border-radius: 12px;
-  padding: 1rem;
-  width: min(260px, 90vw);
+  border: 1px solid rgba(59, 40, 24, 0.1);
+  border-radius: 14px;
+  padding: 0.75rem;
+  width: min(280px, 92vw);
   flex-direction: column;
-  gap: 0.25rem;
-  box-shadow: 0 12px 32px rgba(59, 40, 24, 0.18);
-  backdrop-filter: blur(8px);
+  gap: 0.15rem;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(16px);
   pointer-events: auto;
   z-index: 200;
 }
 
 .mobile-link {
   display: block;
-  padding: 0.65rem 0.75rem;
-  color: #4a3018;
+  padding: 0.75rem 0.9rem;
+  color: var(--text-dark);
   text-decoration: none;
-  font-weight: 500;
-  font-family: system-ui, sans-serif;
+  font-weight: 400;
+  font-family: var(--font-body);
   font-size: 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
+  letter-spacing: -0.01em;
   transition: background 0.15s;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 }
 
 .mobile-link:hover,
 .mobile-link:focus-visible {
+  background: rgba(59, 40, 24, 0.06);
+  outline: none;
+}
+
+.mobile-menu-divider {
+  height: 1px;
   background: rgba(59, 40, 24, 0.08);
-  outline: 2px solid #3b2818;
-  outline-offset: 1px;
+  margin: 0.35rem 0.4rem;
 }
 
 .btn-buy--mobile {
   width: 100%;
-  margin: 0.5rem 0 0;
-  padding: 0.65rem 1.4rem;
-  border-radius: 8px;
-  text-align: center;
+  margin: 0.25rem 0 0.25rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: 10px;
+  justify-content: center;
+  font-size: 1rem;
+  min-height: 44px;
 }
 
 /* ============================================================
@@ -272,8 +372,8 @@
    ============================================================ */
 .scroll-container {
   width: 100vw;
-  color: #4a3018;
-  font-family: system-ui, sans-serif;
+  color: var(--text-warm);
+  font-family: var(--font-body);
 }
 
 .section {
@@ -284,107 +384,121 @@
   box-sizing: border-box;
 }
 
-.section-left  { justify-content: flex-start; }
-.section-right { justify-content: flex-end; text-align: right; }
-.section-center { justify-content: center; text-align: center; }
+.section-left   { justify-content: flex-start; }
+.section-right  { justify-content: flex-end;  text-align: right; }
+.section-center { justify-content: center;    text-align: center; }
+
+/* Alternate section feel: odd sections slightly warmer bg tint via pseudo */
+.section:nth-child(even) .content-box {
+  /* subtle variation — handled via text opacity */
+}
 
 /* ============================================================
    Content containers — scroll-animated
    ============================================================ */
 .content-box {
-  max-width: 440px;
-  /* JS sets --section-opacity and --section-translateY each frame */
+  max-width: 480px;
   opacity: var(--section-opacity, 1);
   transform: translateY(var(--section-translateY, 0px));
   will-change: opacity, transform;
 }
 
-/*
- * Each direct child of .content-box picks up the parent's motion
- * plus a small per-child stagger delay (--child-delay from inline style).
- */
 .animate-child {
   transition:
-    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--child-delay, 0s),
-    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--child-delay, 0s);
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) var(--child-delay, 0s),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) var(--child-delay, 0s);
 }
 
 /* ============================================================
-   Typography
+   Typography — Apple optical sizing principles
    ============================================================ */
+
+/* Eyebrow — 11px all-caps, tracked */
 .section-eyebrow {
-  font-size: 0.78rem;
-  font-family: system-ui, sans-serif;
-  letter-spacing: 0.14em;
+  font-size: 0.69rem;
+  font-family: var(--font-body);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #8b6344;
+  color: var(--text-mid);
   margin: 0 0 0.9rem;
   font-weight: 600;
 }
 
+/* Hero headline — 56px SF Pro Display, line-height 1.07 */
 .hero-title {
-  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-size: clamp(2.6rem, 5.5vw, 3.5rem);
   margin: 0;
-  color: #3b2818;
-  font-family: Georgia, 'Times New Roman', serif;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  color: var(--text-warm);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.07;
 }
 
+/* Section headings — 40px SF Pro Display, line-height 1.1 */
 .section-title {
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  margin: 0 0 1rem;
-  line-height: 1.1;
-  font-family: Georgia, 'Times New Roman', serif;
-  color: #3b2818;
+  font-size: clamp(1.9rem, 3.8vw, 2.8rem);
+  margin: 0 0 0.9rem;
+  line-height: 1.08;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text-warm);
+  letter-spacing: -0.025em;
 }
 
+/* Body text — 17px SF Pro Text, -0.374px tracking */
 .hero-desc {
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  margin: 1.5rem 0;
-  line-height: 1.65;
-  opacity: 0.85;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  margin: 1.4rem 0 2rem;
+  line-height: 1.55;
+  letter-spacing: -0.02em;
+  color: var(--text-mid);
+  font-weight: 400;
 }
 
 .section-desc {
-  font-size: clamp(1rem, 1.4vw, 1.1rem);
-  line-height: 1.65;
-  opacity: 0.8;
+  font-size: clamp(0.95rem, 1.3vw, 1.06rem);
+  line-height: 1.55;
+  letter-spacing: -0.018em;
+  color: var(--text-mid);
+  font-weight: 400;
 }
 
-.mb-2 { margin-bottom: 2.5rem; }
+.mb-2 { margin-bottom: 2rem; }
 
 /* ============================================================
-   Scroll indicator (Hero section)
+   Scroll indicator (Hero section) — Apple-style "scroll to explore"
    ============================================================ */
 .scroll-indicator {
-  opacity: 0.55;
-  font-size: 0.88rem;
-  margin-top: 3rem;
+  opacity: 0.5;
+  font-size: 0.78rem;
+  margin-top: 2.5rem;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  letter-spacing: 0.04em;
+  gap: 0.55rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  font-family: var(--font-body);
+  font-weight: 400;
 }
 
 .scroll-line {
   display: inline-block;
-  width: 24px;
+  width: 20px;
   height: 1px;
   background: currentColor;
   flex-shrink: 0;
   transform-origin: left center;
-  animation: scroll-line-pulse 2s ease-in-out infinite;
+  animation: scroll-line-pulse 2.2s ease-in-out infinite;
 }
 
 @keyframes scroll-line-pulse {
-  0%, 100% { width: 24px; opacity: 0.55; }
-  50%       { width: 40px; opacity: 1; }
+  0%, 100% { width: 20px; opacity: 0.5; }
+  50%       { width: 36px; opacity: 0.9; }
 }
 
 /* ============================================================
-   Scroll progress bar — top of viewport
+   Scroll progress bar — Apple Blue accent
    ============================================================ */
 .scroll-progress-bar {
   position: fixed;
@@ -392,84 +506,85 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: rgba(59, 40, 24, 0.12);
+  background: rgba(59, 40, 24, 0.08);
   z-index: 300;
   pointer-events: none;
 }
 
 .scroll-progress-fill {
   height: 100%;
-  background: #3b2818;
-  transition: width 0.1s linear;
+  background: var(--accent);
+  transition: width 0.08s linear;
   transform-origin: left;
 }
 
 /* ============================================================
-   Scroll dot navigation — right edge
+   Scroll dot navigation — right edge, minimal Apple feel
    ============================================================ */
 .scroll-dots {
   position: fixed;
-  right: 1.5rem;
+  right: 1.25rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 200;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.6rem;
   pointer-events: none;
 }
 
 .scroll-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  border: 1.5px solid rgba(59, 40, 24, 0.5);
+  border: 1.5px solid rgba(59, 40, 24, 0.4);
   background: transparent;
   cursor: pointer;
   padding: 0;
   pointer-events: auto;
-  transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  transition: background 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
 }
 
 .scroll-dot--active {
-  background: #3b2818;
-  border-color: #3b2818;
-  transform: scale(1.35);
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.5);
 }
 
 .scroll-dot:hover {
-  background: rgba(59, 40, 24, 0.4);
-  border-color: #3b2818;
+  background: rgba(59, 40, 24, 0.3);
+  border-color: rgba(59, 40, 24, 0.6);
 }
 
 .scroll-dot:focus-visible {
-  outline: 2px solid #3b2818;
-  outline-offset: 2px;
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 /* ============================================================
-   Responsive — tablet (≤ 900px)
+   Responsive — tablet (≤ 1024px)
    ============================================================ */
-@media (max-width: 900px) {
-  .fixed-nav   { padding: 1.25rem 1.75rem; }
-  .section     { padding: 0 7vw; }
-  .content-box { max-width: 360px; }
+@media (max-width: 1024px) {
+  .fixed-nav   { padding: 0 2rem; }
+  .section     { padding: 0 8vw; }
+  .content-box { max-width: 420px; }
   .scroll-dots { right: 0.75rem; }
 }
 
 /* ============================================================
-   Responsive — mobile (≤ 768px)
+   Responsive — tablet portrait (≤ 768px)
    ============================================================ */
 @media (max-width: 768px) {
   .nav-links     { display: none; }
   .nav-hamburger { display: flex; }
   .mobile-menu   { display: flex; }
   .scroll-dots   { display: none; }
+  .fixed-nav     { padding: 0 1.5rem; }
 
   .section {
-    padding: 0 5vw;
+    padding: 0 6vw;
     align-items: flex-start;
-    padding-top: 30vh;
+    padding-top: 26vh;
   }
 
   .section-right {
@@ -478,41 +593,38 @@
   }
 
   .content-box { max-width: 100%; }
+
+  .cta-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .section-center .cta-group {
+    align-items: center;
+  }
 }
 
 /* ============================================================
    Responsive — small mobile (≤ 480px)
    ============================================================ */
 @media (max-width: 480px) {
-  .fixed-nav { padding: 1rem 1.25rem; }
+  .fixed-nav { padding: 0 1.25rem; }
 
-  .btn-shop {
-    padding: 0.85rem 2.25rem;
+  .btn-shop,
+  .btn-learn {
+    padding: 0.75rem 1.75rem;
     font-size: 1rem;
     width: 100%;
+    justify-content: center;
   }
+
+  .cta-group { width: 100%; }
 
   .scroll-indicator {
-    font-size: 0.78rem;
-    margin-top: 2rem;
-  }
-}
-
-/* ============================================================
-   Reduced-motion preference
-   ============================================================ */
-@media (prefers-reduced-motion: reduce) {
-  .btn-buy,
-  .btn-shop,
-  .hamburger-bar,
-  .mobile-link,
-  .animate-child,
-  .content-box,
-  .fixed-nav,
-  .scroll-dot {
-    transition: none;
+    font-size: 0.72rem;
+    margin-top: 1.75rem;
   }
 
-  .scroll-line   { animation: none; }
-  .loading-fill  { animation: none; width: 40%; margin-left: 30%; }
+  .hero-title { letter-spacing: -0.025em; }
 }

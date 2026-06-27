@@ -6,11 +6,11 @@ import UI from './components/UI'
 import ScrollProgress from './components/ScrollProgress'
 import './App.css'
 
-// Minimal loading screen shown while Three.js assets initialise
 function LoadingFallback() {
   return (
-    <div className="loading-screen" role="status" aria-label="Loading 3D scene">
+    <div className="loading-screen" role="status" aria-label="Loading Coffee4life">
       <div className="loading-logo">Coffee4life</div>
+      <div className="loading-tagline">Crafted for the curious</div>
       <div className="loading-bar">
         <div className="loading-fill" />
       </div>
@@ -21,7 +21,6 @@ function LoadingFallback() {
 function App() {
   return (
     <div id="canvas-container" className="canvas-wrapper">
-      {/* LoadingFallback is rendered outside Canvas so it's visible immediately */}
       <Suspense fallback={<LoadingFallback />}>
         <Canvas
           shadows
