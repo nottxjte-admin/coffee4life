@@ -11,6 +11,58 @@
 }
 
 /* ============================================================
+   Loading screen
+   ============================================================ */
+.loading-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: #faf0e6;
+  z-index: 200;
+}
+
+.loading-logo {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  color: #3b2818;
+  letter-spacing: 0.06em;
+  font-weight: bold;
+}
+
+.loading-bar {
+  width: min(220px, 60vw);
+  height: 3px;
+  background: rgba(59, 40, 24, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-fill {
+  height: 100%;
+  background: #3b2818;
+  border-radius: 2px;
+  animation: loading-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes loading-sweep {
+  0%   { width: 0%;   margin-left: 0; }
+  50%  { width: 60%;  margin-left: 20%; }
+  100% { width: 0%;   margin-left: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-fill {
+    animation: none;
+    width: 40%;
+    margin-left: 30%;
+  }
+}
+
+/* ============================================================
    Navigation — fixed top bar
    ============================================================ */
 .fixed-nav {
