@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
+    minify: 'esbuild',
   },
   test: {
     globals: true,
