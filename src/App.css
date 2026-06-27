@@ -1,3 +1,6 @@
+/* ============================================================
+   Canvas shell
+   ============================================================ */
 .canvas-wrapper {
   width: 100vw;
   height: 100vh;
@@ -7,62 +10,217 @@
   background: #faf0e6;
 }
 
-/* Nav */
+/* ============================================================
+   Navigation — fixed top bar
+   ============================================================ */
 .fixed-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 2rem;
+  padding: 1.5rem 2.5rem;
   display: flex;
   justify-content: space-between;
-  z-index: 10;
+  align-items: center;
+  z-index: 100;
   box-sizing: border-box;
   pointer-events: none;
-  align-items: center;
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 240, 230, 0.85) 0%,
+    rgba(250, 240, 230, 0) 100%
+  );
+  backdrop-filter: blur(0px);
 }
 
 .nav-logo {
   margin: 0;
   color: #3b2818;
-  font-family: sans-serif;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.3rem;
   font-weight: bold;
+  letter-spacing: 0.04em;
+  pointer-events: auto;
+  text-decoration: none;
 }
 
 .nav-links {
   pointer-events: auto;
   display: flex;
   align-items: center;
+  gap: 0.25rem;
 }
 
 .nav-links a {
-  margin: 0 1rem;
+  padding: 0.4rem 0.75rem;
   color: #4a3018;
   text-decoration: none;
   font-weight: 500;
-  font-family: sans-serif;
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  transition: opacity 0.2s;
 }
 
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  opacity: 0.7;
+  outline: 2px solid #3b2818;
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
 .btn-buy {
   background: #3b2818;
-  color: white;
+  color: #fff;
   border: none;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1.4rem;
   border-radius: 20px;
   cursor: pointer;
-  margin-left: 1rem;
-  font-family: sans-serif;
-  font-weight: bold;
+  margin-left: 0.5rem;
+  font-family: system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, transform 0.15s;
 }
 
-/* Scroll Container */
+.btn-buy:hover,
+.btn-buy:focus-visible {
+  background: #4a3018;
+  transform: translateY(-1px);
+  outline: 2px solid #3b2818;
+  outline-offset: 3px;
+}
+
+.btn-shop {
+  background: #3b2818;
+  color: #fff;
+  border: none;
+  padding: 1rem 3rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+  letter-spacing: 0.03em;
+  transition: transform 0.2s, background 0.3s, box-shadow 0.2s;
+  box-shadow: 0 8px 24px rgba(59, 40, 24, 0.25);
+}
+
+.btn-shop:hover,
+.btn-shop:focus-visible {
+  transform: translateY(-2px);
+  background: #4a3018;
+  box-shadow: 0 12px 30px rgba(59, 40, 24, 0.35);
+  outline: 2px solid #3b2818;
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   Hamburger — mobile only
+   ============================================================ */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.nav-hamburger:hover,
+.nav-hamburger:focus-visible {
+  background: rgba(59, 40, 24, 0.08);
+  outline: 2px solid #3b2818;
+  outline-offset: 2px;
+}
+
+.hamburger-bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #3b2818;
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.hamburger-bar.open:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-bar.open:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-bar.open:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ============================================================
+   Mobile dropdown menu
+   ============================================================ */
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 1.5rem;
+  background: rgba(250, 240, 230, 0.97);
+  border: 1px solid rgba(59, 40, 24, 0.12);
+  border-radius: 12px;
+  padding: 1rem;
+  width: min(260px, 90vw);
+  flex-direction: column;
+  gap: 0.25rem;
+  box-shadow: 0 12px 32px rgba(59, 40, 24, 0.18);
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+  z-index: 200;
+}
+
+.mobile-link {
+  display: block;
+  padding: 0.65rem 0.75rem;
+  color: #4a3018;
+  text-decoration: none;
+  font-weight: 500;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.mobile-link:hover,
+.mobile-link:focus-visible {
+  background: rgba(59, 40, 24, 0.08);
+  outline: 2px solid #3b2818;
+  outline-offset: 1px;
+}
+
+.btn-buy--mobile {
+  width: 100%;
+  margin: 0.5rem 0 0;
+  padding: 0.65rem 1.4rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* ============================================================
+   Scroll container and sections
+   ============================================================ */
 .scroll-container {
   width: 100vw;
   color: #4a3018;
-  font-family: sans-serif;
+  font-family: system-ui, sans-serif;
 }
 
-/* Sections */
 .section {
   height: 100vh;
   display: flex;
@@ -85,114 +243,151 @@
   text-align: center;
 }
 
-/* Content Box */
+/* ============================================================
+   Content containers
+   ============================================================ */
 .content-box {
-  max-width: 400px;
+  max-width: 440px;
 }
 
-/* Typography */
+/* ============================================================
+   Typography
+   ============================================================ */
 .hero-title {
-  font-size: 5rem;
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
   margin: 0;
   color: #3b2818;
+  font-family: Georgia, 'Times New Roman', serif;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.05;
 }
 
 .section-title {
-  font-size: 3rem;
-  margin: 0 0 1rem 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  margin: 0 0 1rem;
   line-height: 1.1;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #3b2818;
 }
 
 .hero-desc {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
   margin: 1.5rem 0;
-  line-height: 1.6;
+  line-height: 1.65;
+  opacity: 0.85;
 }
 
 .section-desc {
-  font-size: 1.1rem;
-  line-height: 1.6;
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
+  line-height: 1.65;
   opacity: 0.8;
-}
-
-.scroll-indicator {
-  opacity: 0.6;
-  font-size: 0.9rem;
-  margin-top: 3rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.scroll-line {
-  display: inline-block;
-  width: 20px;
-  height: 1px;
-  background: #4a3018;
 }
 
 .mb-2 {
   margin-bottom: 2.5rem;
 }
 
-.btn-shop {
-  background: #3b2818;
-  color: white;
-  border: none;
-  padding: 1rem 3rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.3s;
-  box-shadow: 0 10px 20px rgba(59, 40, 24, 0.2);
+/* ============================================================
+   Scroll indicator
+   ============================================================ */
+.scroll-indicator {
+  opacity: 0.55;
+  font-size: 0.88rem;
+  margin-top: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.btn-shop:hover {
-  transform: translateY(-2px);
-  background: #4a3018;
+.scroll-line {
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
+/* ============================================================
+   Responsive — tablet (≤ 900px)
+   ============================================================ */
+@media (max-width: 900px) {
   .fixed-nav {
-    padding: 1.5rem;
+    padding: 1.25rem 1.75rem;
   }
 
-  .nav-links a {
-    display: none; /* Hide links on mobile to save space */
+  .section {
+    padding: 0 7vw;
   }
 
-  .hero-title {
-    font-size: 3.5rem;
+  .content-box {
+    max-width: 360px;
+  }
+}
+
+/* ============================================================
+   Responsive — mobile (≤ 768px)
+   Show hamburger, hide desktop nav links
+   ============================================================ */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
   }
 
-  .section-title {
-    font-size: 2.5rem;
+  .nav-hamburger {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: flex;
   }
 
   .section {
     padding: 0 5vw;
+    padding-top: 5rem; /* clear fixed nav */
+    align-items: flex-start;
+    padding-top: 30vh;
   }
 
   .section-right {
     justify-content: flex-start;
     text-align: left;
   }
+
+  .content-box {
+    max-width: 100%;
+  }
 }
 
+/* ============================================================
+   Responsive — small mobile (≤ 480px)
+   ============================================================ */
 @media (max-width: 480px) {
-  .hero-title {
-    font-size: 2.8rem;
+  .fixed-nav {
+    padding: 1rem 1.25rem;
   }
 
-  .section-title {
-    font-size: 2rem;
-  }
-
-  .hero-desc, .section-desc {
+  .btn-shop {
+    padding: 0.85rem 2.25rem;
     font-size: 1rem;
+    width: 100%;
+  }
+
+  .scroll-indicator {
+    font-size: 0.78rem;
+    margin-top: 2rem;
+  }
+}
+
+/* ============================================================
+   Reduced-motion preference
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .btn-buy,
+  .btn-shop,
+  .hamburger-bar,
+  .mobile-link {
+    transition: none;
   }
 }
